@@ -3,6 +3,7 @@ const app = express();
 const R = require('ramda');
 const google = require('google');
 const GitHubApi = require('github');
+const request = require('request');
 const github = new GitHubApi({});
 
 google.lang = 'zh-cn';
@@ -23,10 +24,14 @@ var updateItemField = function(item) {
   return ' ' + item[0] + ' ' + item[1] + ' ';
 };
 
+var updateWdsmItemField = function(item) {
+  return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
+}
+
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, response, next) {
   let message = req.weixin;
-  let content = message.Content;
+  let content = R.toLower(message.Content);
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
 
   if(!phodal){
@@ -37,14 +42,14 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   }
 
   console.log(content);
-  if (R.startsWith('s ', content) || R.startsWith('S ', content)) {
+  if (R.startsWith('s ', content)) {
     let length = 'S '.length;
     let keyword = R.slice(length, Infinity, content);
     google(keyword, function (err, res) {
       let result = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'link'])))(res.links);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
-  } else if (R.startsWith('G ', content) || R.startsWith('g ', content)) {
+  } else if (R.startsWith('g ', content)) {
     let length = 'G '.length;
     let keyword = R.slice(length, Infinity, content);
     github.search.repos({
@@ -57,11 +62,28 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
-  } else {
-    response.reply({
-      content: '未完待续',
-      type: 'text'
-    });
+  } else if(R.startsWith('s ',  content)) {
+    request.get('https://www.wandianshenme.com/api/play/?query=AI', {
+        headers: {
+          'User-Agent': 'google'
+        }
+      }, function (error, response, body) {
+        if (response.statusCode === 200) {
+          const data = JSON.parse(body).results;
+          var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
+          response.reply({
+            content: result,
+            type: 'text'
+          });
+        }
+      }
+    );
+  } else{
+      response.reply({
+        content: '未完待续',
+        type: 'text'
+      });
+    }
   }
 }));
 

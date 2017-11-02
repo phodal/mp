@@ -8,10 +8,10 @@ request.get('https://www.wandianshenme.com/api/play/?query=AI', {
   }, function (error, response, body) {
     if (response.statusCode === 200) {
       var updateItemField = function(item) {
-        return '标题：' + item[0] + ' 链接：' + item[1] + ' ';
+        return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
       }
-      console.log(body.results);
-      var s = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'slug'])))(body.results);
+      const data = JSON.parse(body).results;
+      var s = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'slug'])))(data);
       console.log(s);
     }
   }
