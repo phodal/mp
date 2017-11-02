@@ -20,11 +20,11 @@ app.get('/', function (req, res) {
   res.send('玩点什么')
 });
 
-var updateItemField = function(item) {
+var updateItemField = function (item) {
   return ' ' + item[0] + ' ' + item[1] + ' ';
 };
 
-var updateWdsmItemField = function(item) {
+var updateWdsmItemField = function (item) {
   return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
 }
 
@@ -34,7 +34,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   let content = R.toLower(message.Content);
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
 
-  if(!phodal){
+  if (!phodal) {
     response.reply({
       content: '未完待续',
       type: 'text'
@@ -62,28 +62,26 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
-  } else if(R.startsWith('s ',  content)) {
+  } else if (R.startsWith('s ', content)) {
     request.get('https://www.wandianshenme.com/api/play/?query=AI', {
-        headers: {
-          'User-Agent': 'google'
-        }
-      }, function (error, response, body) {
-        if (response.statusCode === 200) {
-          const data = JSON.parse(body).results;
-          var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
-          response.reply({
-            content: result,
-            type: 'text'
-          });
-        }
+      headers: {
+        'User-Agent': 'google'
       }
-    );
-  } else{
-      response.reply({
-        content: '未完待续',
-        type: 'text'
-      });
-    }
+    }, function (error, response, body) {
+      if (response.statusCode === 200) {
+        const data = JSON.parse(body).results;
+        var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
+        response.reply({
+          content: result,
+          type: 'text'
+        });
+      }
+    });
+  } else {
+    response.reply({
+      content: '未完待续',
+      type: 'text'
+    });
   }
 }));
 
