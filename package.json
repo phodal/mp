@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Phodal Huang",
+  "license": "MIT",
   "dependencies": {
     "aws-serverless-express": "^3.0.2",
     "express": "^4.16.2",

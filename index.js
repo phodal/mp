@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+const app = express();
 let wechat = require('wechat');
 let config = {
   token: process.env.TOKEN,
@@ -10,23 +10,19 @@ let config = {
 
 app.get('/', function (req, res) {
       res.send('Hello World!')
-})
+});
 
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, res, next) {
-  // 微信输入信息都在req.weixin上
   let message = req.weixin;
   if (message.FromUserName === 'diaosi') {
-    // 回复屌丝(普通回复)
     res.reply('hehe');
   } else if (message.FromUserName === 'text') {
-    //你也可以这样回复text类型的信息
     res.reply({
       content: 'text object',
       type: 'text'
     });
   } else if (message.FromUserName === 'hehe') {
-    // 回复一段音乐
     res.reply({
       type: "music",
       content: {
@@ -38,7 +34,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
       }
     });
   } else {
-    // 回复高富帅(图文回复)
     res.reply([
       {
         title: '你来我家接我吧',
