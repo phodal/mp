@@ -20,7 +20,7 @@ app.get('/', function (req, res) {
 });
 
 var updateItemField = function(item) {
-  return '标题：' + item[0] + ' 链接：' + item[1] + ' ';
+  return ' ' + item[0] + ' ' + item[1] + ' ';
 };
 
 app.use(express.query());
