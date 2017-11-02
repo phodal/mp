@@ -1,4 +1,5 @@
-let request = require('request');
+const request = require('request');
+const R = require('ramda');
 
 request.get('https://www.wandianshenme.com/api/play/?query=AI', {
     headers: {
@@ -6,8 +7,12 @@ request.get('https://www.wandianshenme.com/api/play/?query=AI', {
     }
   }, function (error, response, body) {
     if (response.statusCode === 200) {
-      console.log('error: ' + response.statusCode);
-      console.log(body)
+      var updateItemField = function(item) {
+        return '标题：' + item[0] + ' 链接：' + item[1] + ' ';
+      }
+      console.log(body.results);
+      var s = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'slug'])))(body.results);
+      console.log(s);
     }
   }
 );
