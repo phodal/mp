@@ -5,6 +5,7 @@ const google = require('google');
 const GitHubApi = require('github');
 const request = require('request');
 const github = new GitHubApi({});
+const wikiParser = require('wiki-infobox-parser');
 
 google.lang = 'zh-cn';
 
@@ -66,6 +67,17 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
       response.reply('你想要在 GitHub 上搜索的内容有： ' + result);
     });
+  } else if (R.startsWith('wiki ', content)) {
+    let length = 'wiki '.length;
+    let keyword = R.slice(length, Infinity, content);
+    wikiParser(keyword, function(err, result) {
+      if (err) {
+        response.reply('Error' + err.message);
+      } else {
+        response.reply('在 Wiki 上搜索的内容有： ' + result);
+      }
+    });
+
   } else if (R.startsWith('w ', content)) {
     let length = 'w '.length;
     let keyword = R.slice(length, Infinity, content);
@@ -105,7 +117,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
     });
   } else {
     response.reply({
-      content: '当前仅支持 GitHub（g）、玩点什么（w）、玩点什么（p）的搜索功能，『p 』用于搜索 我的博客，『w 』开头用于搜索玩点什么；如使用 "g iot" 在 GitHub 上搜索我的相关项目。有其它需求请在： https://github.com/phodal/phodal-mp  上提建议。',
+      content: '当前仅支持 GitHub（g）、玩点什么（w）、Phodal（p）、维基百科（wiki）的搜索功能，『p 』用于搜索 我的博客，『w 』开头用于搜索玩点什么；如使用 "g iot" 在 GitHub 上搜索我的相关项目。有其它需求请在： https://github.com/phodal/phodal-mp  上提建议。',
       type: 'text'
     });
   }
