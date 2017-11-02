@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "github": "^12.0.1",
-    "google": "^2.1.0"
+    "google": "^2.1.0",
+    "request": "^2.83.0"
   }
 }
