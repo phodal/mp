@@ -42,12 +42,12 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   // }
 
   console.log(content);
-  if (R.startsWith('s ', content)) {
+  if (phodal && R.startsWith('s ', content)) {
     let length = 's '.length;
     let keyword = R.slice(length, Infinity, content);
     google(keyword, function (err, res) {
       let result = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'link'])))(res.links);
-      response.reply('你想要搜索的结果可能是： ' + result);
+      response.reply('你想要在 Google 上搜索的内容有： ' + result);
     });
   } else if (R.startsWith('g ', content)) {
     let length = 'g '.length;
@@ -60,7 +60,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       if (err) throw err;
       const data = res.data.items;
       var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
-      response.reply('你想要搜索的结果可能是： ' + result);
+      response.reply('你想要在 GitHub 上搜索的内容有： ' + result);
     });
   } else if (R.startsWith('w ', content)) {
     let length = 'w '.length;
@@ -71,17 +71,19 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       }
     }, function (error, res, body) {
       if (res.statusCode === 200) {
-        const data = JSON.parse(body).results;
+        let parsed = JSON.parse(body);
+        const data = parsed.results;
+        const count = parsed.count;
         var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
         response.reply({
-          content: result,
+          content: '在『玩点什么』上有' + count + '个结果，前 10 个如下：' + result,
           type: 'text'
         });
       }
     });
   } else {
     response.reply({
-      content: '未完待续',
+      content: '当前仅支持 GitHub（g）、玩点什么（w）、玩点什么（p）的搜索功能，『p 』用于搜索 我的博客，『w 』开头用于搜索玩点什么；如使用 "g iot" 在 GitHub 上搜索我的相关项目。有其它需求请在： https://github.com/phodal/phodal-mp  上提建议。',
       type: 'text'
     });
   }
