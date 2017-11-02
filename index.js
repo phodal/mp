@@ -95,11 +95,10 @@ app.use('/wechat', wechat(config, function (req, response, next) {
     }, function (error, res, body) {
       if (res.statusCode === 200) {
         let parsed = JSON.parse(body);
-        const data = parsed.results;
-        const count = parsed.count;
+        const data = parsed;
         var result = R.map(R.compose(updatePhodalItemField, R.values, R.pick(['title', 'slug'])))(data);
         response.reply({
-          content: '在『Phodal 的博客上』上有' + count + '个结果，前 10 个如下：' + result,
+          content: '在『 phodal.com 』上有 x 个结果，前 10 个如下：' + result,
           type: 'text'
         });
       }
