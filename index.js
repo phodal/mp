@@ -43,14 +43,14 @@ app.use('/wechat', wechat(config, function (req, response, next) {
 
   console.log(content);
   if (R.startsWith('s ', content)) {
-    let length = 'S '.length;
+    let length = 's '.length;
     let keyword = R.slice(length, Infinity, content);
     google(keyword, function (err, res) {
       let result = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'link'])))(res.links);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
   } else if (R.startsWith('g ', content)) {
-    let length = 'G '.length;
+    let length = 'g '.length;
     let keyword = R.slice(length, Infinity, content);
     github.search.repos({
       q: keyword + '+user:phodal',
@@ -62,8 +62,10 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
-  } else if (R.startsWith('s ', content)) {
-    request.get('https://www.wandianshenme.com/api/play/?query=AI', {
+  } else if (R.startsWith('w ', content)) {
+    let length = 'w '.length;
+    let keyword = R.slice(length, Infinity, content);
+    request.get('https://www.wandianshenme.com/api/play/?query=' + keyword, {
       headers: {
         'User-Agent': 'google'
       }
