@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express');
 const app = express();
 let wechat = require('wechat');
 let config = {
@@ -9,7 +9,7 @@ let config = {
 };
 
 app.get('/', function (req, res) {
-      res.send('Hello World!')
+  res.send('玩点什么')
 });
 
 app.use(express.query());
