@@ -69,8 +69,8 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       headers: {
         'User-Agent': 'google'
       }
-    }, function (error, response, body) {
-      if (response.statusCode === 200) {
+    }, function (error, res, body) {
+      if (res.statusCode === 200) {
         const data = JSON.parse(body).results;
         var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
         response.reply({
