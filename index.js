@@ -26,7 +26,11 @@ var updateItemField = function (item) {
 
 var updateWdsmItemField = function (item) {
   return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
-}
+};
+
+var updatePhodalItemField = function (item) {
+  return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
+};
 
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, response, next) {
@@ -77,6 +81,25 @@ app.use('/wechat', wechat(config, function (req, response, next) {
         var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
         response.reply({
           content: '在『玩点什么』上有' + count + '个结果，前 10 个如下：' + result,
+          type: 'text'
+        });
+      }
+    });
+  } else if (R.startsWith('p ', content)) {
+    let length = 'p '.length;
+    let keyword = R.slice(length, Infinity, content);
+    request.get('https://www.phodal.com/api/app/blog_detail/?search=' + keyword, {
+      headers: {
+        'User-Agent': 'google'
+      }
+    }, function (error, res, body) {
+      if (res.statusCode === 200) {
+        let parsed = JSON.parse(body);
+        const data = parsed.results;
+        const count = parsed.count;
+        var result = R.map(R.compose(updatePhodalItemField, R.values, R.pick(['title', 'slug'])))(data);
+        response.reply({
+          content: '在『Phodal 的博客上』上有' + count + '个结果，前 10 个如下：' + result,
           type: 'text'
         });
       }
