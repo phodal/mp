@@ -1,4 +1,6 @@
-let books = [{
+const R = require('ramda');
+
+const books = [{
   name: "Phodal's Idea实战指南",
   url: "https://github.com/phodal/ideabook"
 }, {
@@ -26,5 +28,7 @@ let books = [{
   name: "Serverless 应用开发指南",
   url: "https://github.com/phodal/serverless-guide"
 }];
+
+console.log(R.contains('serverless', 'serverless 应用开发指南'));
 
 exports.books = books;
