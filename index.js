@@ -34,12 +34,12 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   let content = R.toLower(message.Content);
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
 
-  if (!phodal) {
-    response.reply({
-      content: '未完待续',
-      type: 'text'
-    });
-  }
+  // if (!phodal) {
+  //   response.reply({
+  //     content: '未完待续',
+  //     type: 'text'
+  //   });
+  // }
 
   console.log(content);
   if (R.startsWith('s ', content)) {
