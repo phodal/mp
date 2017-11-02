@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const R = require('ramda');
+const google = require('google');
+google.lang = 'zh-cn';
 
 let wechat = require('wechat');
 let config = {
@@ -17,34 +19,22 @@ app.get('/', function (req, res) {
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, res, next) {
   let message = req.weixin;
-  console.log(message);
-  if (message.FromUserName === 'diaosi') {
-    res.reply('hehe');
-  } else if (message.FromUserName === 'text') {
-    res.reply({
-      content: 'text object',
-      type: 'text'
-    });
-  } else if (message.FromUserName === 'hehe') {
-    res.reply({
-      type: "music",
-      content: {
-        title: "来段音乐吧",
-        description: "一无所有",
-        musicUrl: "http://mp3.com/xx.mp3",
-        hqMusicUrl: "http://mp3.com/xx.mp3",
-        thumbMediaId: "thisThumbMediaId"
-      }
+  let content = message.Content;
+  let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
+
+  console.log(content);
+  if (R.startsWith('G ', content) || R.startsWith('g ', content)) {
+    let length = 'G '.length;
+    let keyword = R.slice(length, Infinity, ['a', 'b', 'c', 'd']);
+    google(keyword, function (err, res){
+      let s = R.map(R.compose(R.values, R.pick(['title', 'link'])))(res.links);
+      res.reply(s);
     });
   } else {
-    res.reply([
-      {
-        title: '你来我家接我吧',
-        description: '这是女神与高富帅之间的对话',
-        picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
-        url: 'http://nodeapi.cloudfoundry.com/'
-      }
-    ]);
+    res.reply({
+      content: '未完待续',
+      type: 'text'
+    });
   }
 }));
 
