@@ -19,6 +19,10 @@ app.get('/', function (req, res) {
   res.send('玩点什么')
 });
 
+var updateItemField = function(item) {
+  return '标题：' + item[0] + ' 链接：' + item[1] + ' ';
+};
+
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, response, next) {
   let message = req.weixin;
@@ -26,15 +30,15 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
 
   console.log(content);
-  if (R.startsWith('G ', content) || R.startsWith('g ', content)) {
-    let length = 'G '.length;
+  if (R.startsWith('s ', content) || R.startsWith('S ', content)) {
+    let length = 'S '.length;
     let keyword = R.slice(length, Infinity, content);
     google(keyword, function (err, res) {
-      let result = R.map(R.compose(R.values, R.pick(['title', 'link'])))(res.links);
+      let result = R.map(R.compose(updateItemField, R.values, R.pick(['title', 'link'])))(res.links);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
-  } else if (R.startsWith('Git ', content) || R.startsWith('git ', content)) {
-    let length = 'Git '.length;
+  } else if (R.startsWith('G ', content) || R.startsWith('g ', content)) {
+    let length = 'G '.length;
     let keyword = R.slice(length, Infinity, content);
     github.search.repos({
       q: keyword + '+user:phodal',
@@ -43,11 +47,11 @@ app.use('/wechat', wechat(config, function (req, response, next) {
     }, function (err, res) {
       if (err) throw err;
       const data = res.data.items;
-      var result = R.map(R.compose(R.values, R.pick(['name', 'html_url'])))(data);
+      var result = R.map(R.compose(updateItemField, R.values, R.pick(['name', 'html_url'])))(data);
       response.reply('你想要搜索的结果可能是： ' + result);
     });
   } else {
-    res.reply({
+    response.reply({
       content: '未完待续',
       type: 'text'
     });
