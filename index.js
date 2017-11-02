@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const R = require('ramda');
 const google = require('google');
+const GitHubApi = require('github');
+const github = new GitHubApi({});
+
 google.lang = 'zh-cn';
 
 let wechat = require('wechat');
@@ -17,7 +20,7 @@ app.get('/', function (req, res) {
 });
 
 app.use(express.query());
-app.use('/wechat', wechat(config, function (req, res, next) {
+app.use('/wechat', wechat(config, function (req, response, next) {
   let message = req.weixin;
   let content = message.Content;
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
@@ -25,10 +28,23 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   console.log(content);
   if (R.startsWith('G ', content) || R.startsWith('g ', content)) {
     let length = 'G '.length;
-    let keyword = R.slice(length, Infinity, ['a', 'b', 'c', 'd']);
-    google(keyword, function (err, res){
-      let s = R.map(R.compose(R.values, R.pick(['title', 'link'])))(res.links);
-      res.reply(s);
+    let keyword = R.slice(length, Infinity, content);
+    google(keyword, function (err, res) {
+      let result = R.map(R.compose(R.values, R.pick(['title', 'link'])))(res.links);
+      response.reply('你想要搜索的结果可能是： ' + result);
+    });
+  } else if (R.startsWith('Git ', content) || R.startsWith('git ', content)) {
+    let length = 'Git '.length;
+    let keyword = R.slice(length, Infinity, content);
+    github.search.repos({
+      q: keyword + '+user:phodal',
+      sort: 'stars',
+      order: 'desc'
+    }, function (err, res) {
+      if (err) throw err;
+      const data = res.data.items;
+      var result = R.map(R.compose(R.values, R.pick(['name', 'html_url'])))(data);
+      response.reply('你想要搜索的结果可能是： ' + result);
     });
   } else {
     res.reply({

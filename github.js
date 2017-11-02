@@ -1,6 +1,6 @@
-let GitHubApi = require('github');
-
-let github = new GitHubApi({});
+const GitHubApi = require('github');
+const github = new GitHubApi({});
+const R = require('ramda');
 
 github.search.repos({
   q: 'github' + '+user:phodal',
@@ -8,5 +8,6 @@ github.search.repos({
   order: 'desc'
 }, function (err, res) {
   if (err) throw err;
-  console.log(JSON.stringify(res))
+  const data = res.data.items;
+  var s = R.map(R.compose(R.values, R.pick(['name', 'html_url'])))(data);
 });
