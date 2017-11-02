@@ -684,7 +684,7 @@ readable-stream@1.1:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-request@^2.54.0, request@^2.83.0:
+request@*, request@^2.54.0, request@^2.83.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -868,6 +868,12 @@ wechat@^2.1.0:
     ejs ">=1.0.0"
     wechat-crypto "0.0.2"
     xml2js "0.4.17"
+
+wiki-infobox-parser@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/wiki-infobox-parser/-/wiki-infobox-parser-0.1.11.tgz#cc0f45bc783df64ddebcd1aeb67016bf84584fa1"
+  dependencies:
+    request "*"
 
 xml2js@0.4.17:
   version "0.4.17"

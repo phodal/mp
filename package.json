@@ -16,7 +16,8 @@
     "google": "^2.1.0",
     "ramda": "^0.25.0",
     "request": "^2.83.0",
-    "wechat": "^2.1.0"
+    "wechat": "^2.1.0",
+    "wiki-infobox-parser": "^0.1.11"
   },
   "devDependencies": {
     "serverless-domain-manager": "^1.1.16"
