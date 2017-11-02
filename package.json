@@ -14,7 +14,11 @@
     "express": "^4.16.2",
     "github": "^12.0.1",
     "google": "^2.1.0",
+    "ramda": "^0.25.0",
     "request": "^2.83.0",
     "wechat": "^2.1.0"
+  },
+  "devDependencies": {
+    "serverless-domain-manager": "^1.1.16"
   }
 }

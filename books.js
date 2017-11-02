@@ -25,6 +25,6 @@ let books = [{
 }, {
   name: "Serverless 应用开发指南",
   url: "https://github.com/phodal/serverless-guide"
-}]
+}];
 
-export books;
+exports.books = books;

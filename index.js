@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const R = require('ramda');
+
 let wechat = require('wechat');
 let config = {
   token: process.env.TOKEN,
@@ -15,6 +17,7 @@ app.get('/', function (req, res) {
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, res, next) {
   let message = req.weixin;
+  console.log(message);
   if (message.FromUserName === 'diaosi') {
     res.reply('hehe');
   } else if (message.FromUserName === 'text') {
