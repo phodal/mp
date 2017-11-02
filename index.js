@@ -22,15 +22,15 @@ app.get('/', function (req, res) {
 });
 
 var updateItemField = function (item) {
-  return ' ' + item[0] + ' ' + item[1] + ' ';
+  return ' 《' + item[0] + '》 ' + item[1] + ' ';
 };
 
 var updateWdsmItemField = function (item) {
-  return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
+  return ' 《' + item[0] + '》 https://www.wandianshenme.com/play/' + item[1] + ' ';
 };
 
 var updatePhodalItemField = function (item) {
-  return ' ' + item[0] + ' https://www.wandianshenme.com/play/' + item[1] + ' ';
+  return ' 《' + item[0] + '》 https://www.phodal.com/blog/' + item[1] + ' ';
 };
 
 app.use(express.query());
@@ -74,7 +74,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
       if (err) {
         response.reply('Error' + err.message);
       } else {
-        response.reply('在 Wiki 上搜索的内容有： ' + result);
+        response.reply('在 Wiki 上搜索的内容有： ' + R.values(JSON.parse(result)));
       }
     });
 
