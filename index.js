@@ -81,7 +81,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   } else if (R.startsWith('w ', content)) {
     let length = 'w '.length;
     let keyword = R.slice(length, Infinity, content);
-    request.get('https://www.wandianshenme.com/api/play/?query=' + keyword, {
+    request.get('https://www.wandianshenme.com/api/play/?search=' + keyword, {
       headers: {
         'User-Agent': 'google'
       }
