@@ -47,7 +47,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   // }
 
   console.log(content);
-  if (R.startsWith('s ', content)) {
+  if (phodal && R.startsWith('s ', content)) {
     let length = 's '.length;
     let keyword = R.slice(length, Infinity, content);
     google(keyword, function (err, res) {
