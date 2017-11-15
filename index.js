@@ -36,13 +36,16 @@ var updatePhodalItemField = function (item) {
 app.use(express.query());
 app.use('/wechat', wechat(config, function (req, response, next) {
   let message = req.weixin;
-  if(!message.Content) {
+  if(!message.Content || message.Content === undefined) {
     response.reply({
       content: '需要帮助，添加微信号：growth-ren。当前仅支持 GitHub（g）、玩点什么（w）、Phodal（p）、维基百科（wiki）的搜索功能，『p 』用于搜索 我的博客，『w 』开头用于搜索玩点什么；如使用 "g iot" 在 GitHub 上搜索我的相关项目。有其它需求请在： https://github.com/phodal/phodal-mp  上提建议。',
       type: 'text'
     });
   }
-  let content = R.toLower(message.Content);
+
+
+  console.log(message.Content)
+  let content = message.Content.toLowerCase();
   let phodal = message.FromUserName === 'oTISgjoVLyhB7g-w3_M0h20OASME';
 
   // if (!phodal) {
@@ -51,8 +54,13 @@ app.use('/wechat', wechat(config, function (req, response, next) {
   //     type: 'text'
   //   });
   // }
+  if (content === '书' || content === '电子书' || content === 'book' || content === 'ebook') {
+    return response.reply({
+      content: '电子书下载 《我的职业是前端工程师》： https://x.pho.im/DU1R 《GitHub 漫游指南》： https://x.pho.im/viDJ 《Growth: 全栈增长工程师指南》：https://x.pho.im/ufqX 《Growth: 全栈增长工程师实战》： https://x.pho.im/2Lwj 《Phodal’s Idea实战指南》：https://x.pho.im/rayy 《RePractise》：https://x.pho.im/RRdu',
+      type: 'text'
+    });
+  }
 
-  console.log(content);
   if (phodal && R.startsWith('s ', content)) {
     let length = 's '.length;
     let keyword = R.slice(length, Infinity, content);
@@ -96,7 +104,7 @@ app.use('/wechat', wechat(config, function (req, response, next) {
         let parsed = JSON.parse(body);
         const data = parsed.results;
         const count = parsed.count;
-        var result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
+        let result = R.map(R.compose(updateWdsmItemField, R.values, R.pick(['title', 'slug'])))(data);
         response.reply({
           content: '在『玩点什么』上有' + count + '个结果，前 10 个如下：' + result,
           type: 'text'
