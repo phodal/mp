@@ -37,7 +37,7 @@ app.use(express.query());
 app.use('/wechat', wechat(config, function (req, response, next) {
   let message = req.weixin;
   if(!message.Content || message.Content === undefined) {
-    response.reply({
+    return response.reply({
       content: '需要帮助，添加微信号：growth-ren。当前仅支持 GitHub（g）、玩点什么（w）、Phodal（p）、维基百科（wiki）的搜索功能，『p 』用于搜索 我的博客，『w 』开头用于搜索玩点什么；如使用 "g iot" 在 GitHub 上搜索我的相关项目。有其它需求请在： https://github.com/phodal/phodal-mp  上提建议。',
       type: 'text'
     });
